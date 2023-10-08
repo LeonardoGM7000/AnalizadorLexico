@@ -1,0 +1,42 @@
+
+
+// Programa para verificar el código
+
+
+// SECCIÓN DE SÍMBOLOS DE UN SOLO CARACTER
+(
+)
+{
+}
+.
+,
+;
+:
++
+-
+////////////////////////////////////////////
+
+// SECCIÓN DE COMENTARIOS
+
+// Hola
+//
+//
+//
+// AAAAAAAAAABBBBBBBBBBBB
+
+
+// SECCIÓN DE COMENTARIOS MULTILÍNEA
+
+/*
+
+
+
+
+*/
+
+/* El siguiente comentario será un error*/
+
+/* error
+
+
+//////////////////////////////////////////
