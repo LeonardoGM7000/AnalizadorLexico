@@ -56,10 +56,13 @@ public class Scanner {
         int estado = 0;
         char c;
 
-        for (int i = 0; i < source.length(); i++) {
+        // Consideramos estado 0 como inicial y estado -1 como final
+
+        for(int i=0; i<source.length(); i++) {
+
             c = source.charAt(i);
 
-            switch (estado) {
+            switch(estado){
 
                 // Definimos los estados del autómata
 
@@ -69,6 +72,12 @@ public class Scanner {
                     if (Character.isLetter(c)) {
 
                         estado = 1;
+                        lexema += c;
+                    }
+
+                    else if(Character.isDigit(c)){
+
+                        estado = 2;
                         lexema += c;
                     }
 
@@ -84,7 +93,150 @@ public class Scanner {
                         lexema += c;
                     }
 
-                    break;
+                break;
+
+                case 2:
+
+                    if(Character.isDigit(c)){
+                        
+                        estado = 2;
+                        lexema += c; 
+                    }
+
+                    else if(c == '.'){
+
+                        estado = 3;
+                        lexema += c;
+                    }
+
+                    else if(c == 'E'){
+
+                        estado = 5;
+                        lexema += c;
+                    }
+
+                    else{
+
+                        // Creamos token para número entero
+                        Token new_token = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+
+                    }
+
+                break;
+
+                case 3:
+
+                    if(Character.isDigit(c)){
+
+                        estado = 4;
+                        lexema += c;
+                    
+                    }else{
+                        
+                        estado = -1;
+                        lexema += c;
+                    }
+
+                break;
+
+                case 4:
+
+                    if(Character.isDigit(c)){
+
+                        estado = 4;
+                        lexema += c;
+                    }
+
+                    else if(c == 'E'){
+
+                        estado = 5;
+                        lexema += c;
+                    }
+
+                    else{
+
+                        // Creamos token para número con decimal
+                        Token new_token = new Token(TipoToken.NUMBER, lexema, Double.valueOf(lexema));
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+
+                    }
+
+
+                break;
+
+
+                case 5:
+                    
+                if(c == '+' || c == '-'){
+
+                    estado = 6;
+                    lexema += c;
+                
+                }
+
+                else if(Character.isDigit(c)){
+
+                    estado = 7;
+                    lexema += c;
+                }
+
+                else{
+
+                    estado = -1;
+                    lexema += c;
+
+                }
+
+                break;
+
+                case 6:
+
+                    if(Character.isDigit(c)){
+
+                        estado = 7;
+                        lexema += c;
+                    
+                    }
+
+                    else{
+
+                        estado = -1;
+                        lexema += c;
+                    }
+
+                break;
+
+                case 7:
+
+                    if(Character.isDigit(c)){
+
+                        estado = 7;
+                        lexema += c;
+                    }
+
+                    else{
+
+                        // Creamos token para número con exponente
+                        Token new_token = new Token(TipoToken.NUMBER, lexema, Double.valueOf(lexema));
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+
+                break;
+                
+
 
                 case 10:
 
@@ -112,7 +264,7 @@ public class Scanner {
 
                     }
 
-                    break;
+                break;
 
                 case 11:
 
@@ -130,7 +282,7 @@ public class Scanner {
 
                     }
 
-                    break;
+                break;
 
                 case 12:
 
@@ -145,7 +297,7 @@ public class Scanner {
                         lexema += c;
                     }
 
-                    break;
+                break;
 
                 case 13:
 
@@ -170,7 +322,7 @@ public class Scanner {
                         lexema += c;
                     }
 
-                    break;
+                break;
 
                 case 14:
 
@@ -184,7 +336,7 @@ public class Scanner {
                     lexema = "";
                     i--;
 
-                    break;
+                break;
             }
         }
 
