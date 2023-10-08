@@ -95,6 +95,38 @@ public class Scanner {
 
                 break;
 
+                case 1:
+
+                    if(Character.isLetter(c) || Character.isDigit(c)){
+                        
+                        estado = 1;
+                        lexema += c;
+                    
+                    }else{
+
+                        // Creamos el token para identificadores o palabras clave
+                        TipoToken t_token = palabrasReservadas.get(lexema);
+
+                        if(t_token == null){
+
+                            Token new_token = new Token(TipoToken.IDENTIFIER, lexema);
+                            tokens.add(new_token);
+
+                        }else{
+
+                            Token new_token = new Token(t_token, lexema);
+                            tokens.add(new_token);
+
+
+                        }
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+
+                break;
+
                 case 2:
 
                     if(Character.isDigit(c)){
