@@ -72,9 +72,101 @@ public class Scanner {
                         lexema += c;
                     }
 
+                    else if (c == '/') {
+
+                        estado = 10;
+                        lexema += c;
+                    }
+
                     else if (simbolos.contains(c + "")) {
 
                         estado = 14;
+                        lexema += c;
+                    }
+
+                    break;
+
+                case 10:
+
+                    if (c == '*') {
+
+                        estado = 12;
+                        lexema += c;
+                    }
+
+                    else if (c == '/') {
+
+                        estado = 11;
+                        lexema += c;
+                    }
+
+                    else {
+
+                        // Creamos token para símbolo de división
+                        Token new_token = new Token(TipoToken.SLASH, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+
+                    }
+
+                    break;
+
+                case 11:
+
+                    if (c != '\n' && c != '\r') {
+
+                        estado = 11;
+                        lexema += c;
+                    }
+
+                    else {
+
+                        // No creamos token para comentario, regresamos cadena a vacía y estado a 0
+                        estado = 0;
+                        lexema = "";
+
+                    }
+
+                    break;
+
+                case 12:
+
+                    if (c == '*') {
+
+                        estado = 13;
+                        lexema += c;
+
+                    } else {
+
+                        estado = 12;
+                        lexema += c;
+                    }
+
+                    break;
+
+                case 13:
+
+                    if (c == '\n') {
+
+                        estado = 12;
+                        lexema += c;
+                    }
+
+                    else if (c == '/') {
+
+                        // no creamos token para comentario, regresamos a cadena vacia y al estado 0
+                        lexema += c;
+
+                        estado = 0;
+                        lexema = "";
+                    }
+
+                    else {
+
+                        estado = 13;
                         lexema += c;
                     }
 
