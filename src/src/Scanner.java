@@ -270,6 +270,66 @@ public class Scanner {
 
                 break;
                 
+                case 8:
+
+                    if(c == '"'){
+
+                        // Creamos el token cadena
+                        lexema += c;
+                        Token new_token = new Token(TipoToken.STRING, lexema, lexema.replaceAll("\"",""));
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";  
+                    }
+
+
+                    else if(c != '\n' && c != '\r'){
+
+                        estado = 9;
+                        lexema += c;
+                    
+                    }
+
+                    
+
+                    else{
+
+                        estado = -1;
+                        lexema += c;
+                    }
+
+                break;
+
+                case 9:
+
+                
+                    if(c == '"'){
+
+                        // Creamos el token cadena
+                        lexema += c;
+                        Token new_token = new Token(TipoToken.STRING, lexema, lexema.replaceAll("\"",""));
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                    }
+
+                    else if(c != '\n' && c != '\r'){
+
+                        estado = 9;
+                        lexema += c;
+                    }
+
+
+                    else{
+
+                        estado = -1;
+                        lexema += c;
+
+                    }
+
+                break;
 
 
                 case 10:
