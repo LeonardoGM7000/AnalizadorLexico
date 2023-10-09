@@ -7,71 +7,74 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
-    private static final Map<String, TipoToken> caracterUnico;
+    private static final Map<String, TipoToken> unCaracter;
 
     static {
         palabrasReservadas = new HashMap<>();
-        palabrasReservadas.put("and", TipoToken.AND);
-        palabrasReservadas.put("else", TipoToken.ELSE);
-        palabrasReservadas.put("false", TipoToken.FALSE);
-        palabrasReservadas.put("for", TipoToken.FOR);
-        palabrasReservadas.put("fun", TipoToken.FUN);
-        palabrasReservadas.put("if", TipoToken.IF);
-        palabrasReservadas.put("null", TipoToken.NULL);
-        palabrasReservadas.put("or", TipoToken.OR);
-        palabrasReservadas.put("print", TipoToken.PRINT);
+        palabrasReservadas.put("and",    TipoToken.AND);
+        palabrasReservadas.put("else",   TipoToken.ELSE);
+        palabrasReservadas.put("false",  TipoToken.FALSE);
+        palabrasReservadas.put("for",    TipoToken.FOR);
+        palabrasReservadas.put("fun",    TipoToken.FUN);
+        palabrasReservadas.put("if",     TipoToken.IF);
+        palabrasReservadas.put("null",   TipoToken.NULL);
+        palabrasReservadas.put("or",     TipoToken.OR);
+        palabrasReservadas.put("print",  TipoToken.PRINT);
         palabrasReservadas.put("return", TipoToken.RETURN);
-        palabrasReservadas.put("true", TipoToken.TRUE);
-        palabrasReservadas.put("var", TipoToken.VAR);
-        palabrasReservadas.put("while", TipoToken.WHILE);
+        palabrasReservadas.put("true",   TipoToken.TRUE);
+        palabrasReservadas.put("var",    TipoToken.VAR);
+        palabrasReservadas.put("while",  TipoToken.WHILE);
 
-        // Creamos otro hashmap que servirá para símbolos de un solo caracter
-        caracterUnico = new HashMap<>();
-        caracterUnico.put("(", TipoToken.LEFT_PAREN);
-        caracterUnico.put(")", TipoToken.RIGHT_PAREN);
-        caracterUnico.put("{", TipoToken.LEFT_BRACE);
-        caracterUnico.put("}", TipoToken.RIGHT_BRACE);
-        caracterUnico.put(".", TipoToken.DOT);
-        caracterUnico.put(",", TipoToken.COMMA);
-        caracterUnico.put(";", TipoToken.SEMICOLON);
-        caracterUnico.put("*", TipoToken.STAR);
-        caracterUnico.put("+", TipoToken.PLUS);
-        caracterUnico.put("-", TipoToken.MINUS);
+        // Creamos otro hashmap para simbolos de un solo caracter
+        unCaracter = new HashMap<>();
+        unCaracter.put("(", TipoToken.LEFT_PAREN);
+        unCaracter.put(")", TipoToken.RIGHT_PAREN);
+        unCaracter.put("{", TipoToken.LEFT_BRACE);
+        unCaracter.put("}", TipoToken.RIGHT_BRACE);
+        unCaracter.put(".", TipoToken.DOT);
+        unCaracter.put(",", TipoToken.COMMA);
+        unCaracter.put(";", TipoToken.SEMICOLON);
+        unCaracter.put("*", TipoToken.STAR);
+        unCaracter.put("+", TipoToken.PLUS);
+        unCaracter.put("-", TipoToken.MINUS);
     }
 
+    
+
+
+
     private final String source;
-    //-----------------------------------COMENTARIO PRUEBA--------------------------------------------------------
-    //PRUEBA 2
 
     private final List<Token> tokens = new ArrayList<>();
-
-    public Scanner(String source) {
+    
+    public Scanner(String source){
         this.source = source + " ";
     }
 
-    // Definimos una lista para los símbolos de un solo caracter
-    List<String> simbolos = Arrays.asList(
-            "(", ")", "{", "}", ".", ",", ";", "*", "+", "-");
+     // Símbolos un solo caracter 
+        List<String> simbolos = Arrays.asList(
+                "(", ")", "{", "}", ".", ",", ";", "*", "+","-");
 
     public List<Token> scan() throws Exception {
+
+
         String lexema = "";
-        int estado = 0;
+        int estado = 0, lineas = 1;
         char c;
 
         // Consideramos estado 0 como inicial y estado -1 como final
 
-        for(int i=0; i<source.length(); i++) {
-
+        for(int i=0; i<source.length(); i++){
+    
             c = source.charAt(i);
-
+        
             switch(estado){
 
-                // Definimos los estados del autómata
+                // Consderamos el case 0 como estado inicial
 
-                // Definimos 0 como estado inicial
                 case 0:
 
-                    if (Character.isLetter(c)) {
+                    if(Character.isLetter(c)){
 
                         estado = 1;
                         lexema += c;
@@ -83,15 +86,45 @@ public class Scanner {
                         lexema += c;
                     }
 
-                    else if (c == '/') {
+                    else if(c == '"'){
+                    
+                        estado = 8;
+                        lexema += c;
+                    }
+
+                    else if(c == '/'){
 
                         estado = 10;
                         lexema += c;
                     }
 
-                    else if (simbolos.contains(c + "")) {
+                    else if(simbolos.contains(c+"")){
 
                         estado = 14;
+                        lexema += c;
+                    }
+
+                    else if(c == '<'){
+
+                        estado = 15;
+                        lexema += c;
+                    }
+
+                    else if(c == '>'){
+
+                        estado = 16;
+                        lexema += c;
+                    }
+
+                    else if(c == '!'){
+
+                        estado = 17;
+                        lexema += c;
+                    }
+
+                    else if(c == '='){
+
+                        estado = 18;
                         lexema += c;
                     }
 
@@ -269,7 +302,7 @@ public class Scanner {
                     }
 
                 break;
-                
+
                 case 8:
 
                     if(c == '"'){
@@ -331,24 +364,23 @@ public class Scanner {
 
                 break;
 
-
                 case 10:
 
-                    if (c == '*') {
+                    if(c == '*'){
 
                         estado = 12;
                         lexema += c;
                     }
 
-                    else if (c == '/') {
+                    else if(c == '/'){
 
                         estado = 11;
                         lexema += c;
                     }
 
-                    else {
+                    else{
 
-                        // Creamos token para símbolo de división
+                        // Creamos token para simbolo división
                         Token new_token = new Token(TipoToken.SLASH, lexema);
                         tokens.add(new_token);
 
@@ -356,36 +388,37 @@ public class Scanner {
                         lexema = "";
                         i--;
 
+
                     }
 
                 break;
 
                 case 11:
 
-                    if (c != '\n' && c != '\r') {
+                    if(c != '\n' && c != '\r'){
 
                         estado = 11;
                         lexema += c;
                     }
 
-                    else {
+                    else{
 
-                        // No creamos token para comentario, regresamos cadena a vacía y estado a 0
+                        // No creamos token para comentario
                         estado = 0;
                         lexema = "";
-
+                        
                     }
 
                 break;
 
                 case 12:
 
-                    if (c == '*') {
+                    if(c == '*'){
 
                         estado = 13;
                         lexema += c;
-
-                    } else {
+                    
+                    }else{
 
                         estado = 12;
                         lexema += c;
@@ -395,22 +428,22 @@ public class Scanner {
 
                 case 13:
 
-                    if (c == '\n') {
+                    if(c == '\n'){
 
                         estado = 12;
                         lexema += c;
                     }
 
-                    else if (c == '/') {
+                    else if(c == '/'){
 
-                        // no creamos token para comentario, regresamos a cadena vacia y al estado 0
+                        // no creamos token para comentario
                         lexema += c;
-
+                        
                         estado = 0;
                         lexema = "";
                     }
 
-                    else {
+                    else{
 
                         estado = 13;
                         lexema += c;
@@ -419,9 +452,9 @@ public class Scanner {
                 break;
 
                 case 14:
-
-                    // Creamos el token para caracteres de un solo símbolo
-                    TipoToken t_token = caracterUnico.get(lexema);
+                    
+                     // Creamos el token para identificadores o palabras clave
+                    TipoToken t_token = unCaracter.get(lexema);
                     Token new_Token = new Token(t_token, lexema);
 
                     tokens.add(new_Token);
@@ -431,9 +464,143 @@ public class Scanner {
                     i--;
 
                 break;
-            }
+
+                case 15:
+
+                    if(c == '='){
+
+                        // Creamos token para "<="
+                        lexema += c;
+                        Token new_token = new Token(TipoToken.LESS_EQUAL, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                    
+                    }else{
+
+                        // Creamos token para "<"
+                        Token new_token = new Token(TipoToken.LESS, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+
+
+                    }
+
+                break;
+
+                case 16:
+
+                    
+                    if(c == '='){
+
+                        // Creamos token para ">="
+                        lexema += c;
+                        Token new_token = new Token(TipoToken.GREATER_EQUAL, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                    
+                    }else{
+
+                        // Creamos token para ">"
+                        Token new_token = new Token(TipoToken.GREATER, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+
+
+                    }
+                break;
+
+                case 17:
+
+                    
+                    if(c == '='){
+
+                        // Creamos token para "!="
+                        lexema += c;
+                        Token new_token = new Token(TipoToken.BANG_EQUAL, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                    
+                    }else{
+
+                        // Creamos token para "!"
+                        Token new_token = new Token(TipoToken.BANG, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+
+                break;
+
+                case 18:
+
+                    
+                    if(c == '='){
+
+                        // Creamos token para "=="
+                        lexema += c;
+                        Token new_token = new Token(TipoToken.EQUAL_EQUAL, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                    
+                    }else{
+
+                        // Creamos token para "="
+                        Token new_token = new Token(TipoToken.EQUAL, lexema);
+                        tokens.add(new_token);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+
+                    
+                break;
+
+                // Consideramos default como el estado muerto, el cual marcará si existe algún error
+                default:
+
+                        Interprete.error(lineas, lexema);
+                        estado = 0;
+                        lexema = "";
+
+                break;
+
+            }   
+
+
+            // Verificamos si existe un salto de línea para incrementar las líneas del código
+             if(c == '\n')
+                lineas++;
+        
+        
         }
+
+        // Verifcamos si quedó en un estado de aceptación o no
+            if(estado != 0){
+
+                Interprete.error(lineas, lexema);
+                lexema = "";
+                estado = 0;
+            }
+
 
         return tokens;
     }
+
 }
